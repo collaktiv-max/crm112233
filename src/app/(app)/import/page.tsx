@@ -2,7 +2,7 @@ import { ImportClient } from "@/components/ImportClient";
 
 export default function ImportPage() {
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-2xl space-y-4">
       <header>
         <h1 className="h1">Importera</h1>
         <p className="text-sm text-gray-500">

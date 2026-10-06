@@ -13,7 +13,7 @@ export default async function EditCompanyPage({ params }: { params: Promise<{ id
   if (!company) notFound();
 
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-2xl space-y-4">
       <Link href={`/foretag/${id}`} className="text-sm font-semibold text-brand">← {company.name}</Link>
       <h1 className="h1">Redigera</h1>
       <CompanyForm action={updateCompany.bind(null, id)} company={company} />

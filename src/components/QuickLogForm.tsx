@@ -203,7 +203,7 @@ export function QuickLogForm({ companies, initialCompanyId }: { companies: Picka
           </section>
 
           {state && "error" in state && <p className="text-sm text-red-700">{state.error}</p>}
-          <button className="btn-primary sticky bottom-24 w-full py-4 text-base shadow-lg" disabled={pending}>
+          <button className="btn-primary sticky bottom-24 w-full lg:bottom-6 py-4 text-base shadow-lg" disabled={pending}>
             {pending ? "Sparar…" : "Spara"}
           </button>
         </>

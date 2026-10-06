@@ -79,10 +79,10 @@ export default async function DashboardPage() {
   const byType = (type: string) => activities.filter((a) => a.type === type).length;
 
   return (
-    <div className="space-y-6">
-      <h1 className="h1">Mål</h1>
+    <div className="mx-auto max-w-6xl space-y-6 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6 lg:space-y-0">
+      <h1 className="h1 lg:col-span-2">Mål</h1>
 
-      <section className="card space-y-3 border-brand/30 bg-accent-light/40">
+      <section className="card space-y-3 border-brand/30 bg-accent-light/40 lg:col-span-2">
         <div className="flex items-end justify-between">
           <div>
             <p className="text-4xl font-bold tabular-nums text-brand">
@@ -100,7 +100,7 @@ export default async function DashboardPage() {
         </div>
       </section>
 
-      <section className="grid grid-cols-2 gap-3">
+      <section className="grid grid-cols-2 gap-3 lg:col-span-2 lg:grid-cols-4">
         <Tile value={kr(paid)} label="Intäkt (betalt)" sub={unpaidValue ? `${kr(unpaidValue)} väntar på betalning` : undefined} />
         <Tile value={`${foundingLeft}`} label="Founding Partner-platser kvar" sub={`av ${FOUNDING_PARTNER_SLOTS}`} />
         <Tile value={`${byType("besok")}`} label="Besök senaste 7 dagarna" sub={`${byType("samtal")} samtal · ${byType("mejl") + byType("dm")} mejl/DM`} />
@@ -135,7 +135,7 @@ export default async function DashboardPage() {
         </section>
       )}
 
-      <section className="flex flex-col gap-2">
+      <section className="flex flex-col gap-2 lg:hidden">
         <Link href="/import" className="btn-secondary">Importera CSV</Link>
         <form action={signOut}>
           <button className="btn-secondary w-full text-gray-500">Logga ut</button>

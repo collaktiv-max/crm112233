@@ -54,7 +54,10 @@ Ny medlem: `insert into team_members (email) values ('namn@collaktiv.se');` + ko
 - `src/lib/actions.ts` – alla server actions (mutationer)
 - `src/lib/supabase/{server,client}.ts` – Supabase-klienter
 - `src/app/(app)/` – inloggade sidor: Idag (`/`), `/foretag`, `/pipeline`, `/logga`, `/dashboard`, `/import`
-- `src/components/` – klientkomponenter
+- `src/components/` – klientkomponenter; `pipeline/` = kanban (logik i `logic.ts`, testad)
+- **Dator och mobil är olika vyer**, brytpunkt `lg` (1024 px): dator har `Sidebar` (sök, kortkommandon
+  L = logga, / = sök), tabeller och flerkolumnslayout; mobil har `BottomNav`, listor och en flik per
+  pipeline-steg. Bygg båda när du lägger till en sida.
 
 ## Kommandon
 

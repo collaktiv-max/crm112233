@@ -24,7 +24,7 @@ export default async function QuickLogPage({ searchParams }: { searchParams: Pro
   }
 
   return (
-    <div className="space-y-4">
+    <div className="mx-auto max-w-2xl space-y-4">
       <h1 className="h1">Snabblogg</h1>
       <QuickLogForm companies={companies} initialCompanyId={foretag} />
     </div>

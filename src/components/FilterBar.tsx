@@ -28,8 +28,8 @@ export function FilterBar() {
   const select = "input py-2 text-sm";
   return (
     <div className="space-y-2">
-      <input className="input" type="search" placeholder="Sök företag…" value={q} onChange={(e) => setQ(e.target.value)} />
-      <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
+      <input className="input lg:max-w-md" type="search" placeholder="Sök företag…" value={q} onChange={(e) => setQ(e.target.value)} />
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-5 lg:max-w-4xl">
         <select className={select} value={params.get("steg") ?? ""} onChange={(e) => set("steg", e.target.value)} aria-label="Steg">
           <option value="">Alla steg</option>
           {STAGES.map((s) => (
