@@ -41,10 +41,13 @@ Logik som ligger i databasen (testa med SQL, inte bara i appen):
 - `priority_score` räknas av `compute_priority_score()` vid varje insert/update
 - automatiska uppföljningar i `companies_after_stage_change()`
 - `last_contact_at` uppdateras när en aktivitet loggas
-- max 25 Founding Partners
+- max 25 Founding Partners (totalt för teamet)
 - `purge_stale_lost_companies()` för GDPR-rensning
 
-All data har `owner_id default auth.uid()` och RLS `owner_id = auth.uid()`.
+Teamet delar all data: RLS släpper in den som finns i `team_members` (`is_team_member()`, matchar
+JWT-mejlen). `owner_id` betyder "skapad av", `activities.logged_by` visar vem som loggade.
+Ny medlem: `insert into team_members (email) values ('namn@collaktiv.se');` + konto i Supabase Auth
++ adressen i `ALLOWED_EMAILS`.
 
 ## Kod
 

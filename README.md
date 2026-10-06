@@ -7,7 +7,7 @@ mobilen · Idag-vy med uppföljningar och Dagens lista · CSV-import · dashboar
 
 ## Kom igång (produktion)
 
-1. **Supabase:** skapa ett projekt på [supabase.com](https://supabase.com). Kör migrationen, antingen
+1. **Supabase:** skapa ett projekt på [supabase.com](https://supabase.com). Kör migrationerna i tur och ordning, antingen
    - `npx supabase link --project-ref <ref> && npx supabase db push`, eller
    - klistra in `supabase/migrations/20261006000000_init.sql` i SQL Editor.
 2. **Användare:** Authentication → Users → *Add user* (mejl + lösenord, *Auto confirm*).
@@ -27,6 +27,14 @@ npm run dev
 ```
 
 Skapa en lokal användare i Studio (http://127.0.0.1:54323) eller via admin-API:t.
+
+## Lägga till en kollega
+
+Alla i teamet ser och redigerar samma data. För en ny person:
+
+1. Supabase → Authentication → Users → *Add user* (Auto confirm).
+2. Supabase → SQL Editor: `insert into team_members (email) values ('namn@collaktiv.se');`
+3. Vercel → `ALLOWED_EMAILS`: lägg till adressen (kommaseparerat) och gör Redeploy.
 
 ## Import
 

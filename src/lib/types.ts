@@ -65,6 +65,7 @@ export type Activity = {
   outcome: string | null;
   note: string | null;
   objection: string | null;
+  logged_by: string | null;
   created_at: string;
 };
 

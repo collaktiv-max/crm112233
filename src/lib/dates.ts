@@ -36,6 +36,13 @@ export function formatDate(iso: string): string {
   });
 }
 
+/** "egon@collaktiv.se" → "Egon" */
+export function personName(email: string | null): string {
+  if (!email) return "";
+  const local = email.split("@")[0].split(/[._]/)[0];
+  return local.charAt(0).toUpperCase() + local.slice(1);
+}
+
 export function formatDateTime(iso: string): string {
   return new Date(iso).toLocaleString("sv-SE", {
     timeZone: TZ,

@@ -10,11 +10,11 @@ import {
   STAGE_LABELS,
   type Stage,
 } from "@/lib/constants";
-import { addDays, daysBetween, today } from "@/lib/dates";
+import { addDays, daysBetween, personName, today } from "@/lib/dates";
 
 type Row = { stage: Stage; lost_reason: string | null };
 type ContractRow = { founding_partner: boolean; amount_paid: number | null; list_price: number; paid_at: string | null };
-type ActivityRow = { type: string; objection: string | null; occurred_at: string };
+type ActivityRow = { type: string; objection: string | null; occurred_at: string; logged_by: string | null };
 
 function Bars({ rows, max }: { rows: { label: string; value: number }[]; max?: number }) {
   const top = max ?? Math.max(1, ...rows.map((r) => r.value));
@@ -51,7 +51,7 @@ export default async function DashboardPage() {
   const [companiesRes, contractsRes, activitiesRes] = await Promise.all([
     supabase.from("companies").select("stage, lost_reason").returns<Row[]>(),
     supabase.from("contracts").select("founding_partner, amount_paid, list_price, paid_at").returns<ContractRow[]>(),
-    supabase.from("activities").select("type, objection, occurred_at").gte("occurred_at", addDays(t, -7)).returns<ActivityRow[]>(),
+    supabase.from("activities").select("type, objection, occurred_at, logged_by").gte("occurred_at", addDays(t, -7)).returns<ActivityRow[]>(),
   ]);
   const companies = companiesRes.data ?? [];
   const contracts = contractsRes.data ?? [];
@@ -71,6 +71,11 @@ export default async function DashboardPage() {
   for (const c of companies) if (c.stage === "forlorad") lost.set(c.lost_reason ?? "Okänd", (lost.get(c.lost_reason ?? "Okänd") ?? 0) + 1);
   const objections = new Map<string, number>();
   for (const a of activities) if (a.objection) objections.set(a.objection, (objections.get(a.objection) ?? 0) + 1);
+  const perPerson = new Map<string, number>();
+  for (const a of activities) {
+    const who = personName(a.logged_by) || "Okänd";
+    perPerson.set(who, (perPerson.get(who) ?? 0) + 1);
+  }
   const byType = (type: string) => activities.filter((a) => a.type === type).length;
 
   return (
@@ -106,6 +111,13 @@ export default async function DashboardPage() {
         <h2 className="h2 mb-3">Pipeline</h2>
         <Bars rows={[...MAIN_STAGES, "aterkom" as const].map((s) => ({ label: STAGE_LABELS[s], value: count(s) }))} />
       </section>
+
+      {perPerson.size > 1 && (
+        <section className="card">
+          <h2 className="h2 mb-3">Kontakter senaste 7 dagarna</h2>
+          <Bars rows={[...perPerson.entries()].sort((a, b) => b[1] - a[1]).map(([label, value]) => ({ label, value }))} />
+        </section>
+      )}
 
       <section className="card">
         <h2 className="h2 mb-3">Förlust-anledningar</h2>

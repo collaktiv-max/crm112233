@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ACTIVITY_LABELS, CHANNEL_LABELS, PACKAGE_LABELS, STAGE_LABELS } from "@/lib/constants";
-import { formatDate, formatDateTime, relativeDay } from "@/lib/dates";
+import { formatDate, formatDateTime, personName, relativeDay } from "@/lib/dates";
 import { ScoreBadge, StageBadge } from "@/components/StageBadge";
 import { StageMover } from "@/components/StageMover";
 import { TaskItem } from "@/components/TaskItem";
@@ -174,7 +174,10 @@ export default async function CompanyPage({ params }: { params: Promise<{ id: st
                 {ACTIVITY_LABELS[a.type]}
                 {a.outcome && <span className="font-normal text-gray-600"> · {a.outcome}</span>}
               </p>
-              <p className="text-xs text-gray-500">{formatDateTime(a.occurred_at)}</p>
+              <p className="text-xs text-gray-500">
+                {formatDateTime(a.occurred_at)}
+                {a.logged_by && ` · ${personName(a.logged_by)}`}
+              </p>
               {a.objection && <p className="mt-1 text-xs text-orange-700">Invändning: {a.objection}</p>}
               {a.note && <p className="mt-1 whitespace-pre-line text-gray-700">{a.note}</p>}
             </li>

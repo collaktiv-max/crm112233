@@ -18,3 +18,10 @@ test("relativeDay", () => {
   assert.equal(relativeDay("2026-10-09", "2026-10-06"), "om 3 dagar");
   assert.equal(relativeDay("2026-10-01", "2026-10-06"), "5 dagar sedan");
 });
+
+test("personName", async () => {
+  const { personName } = await import("./dates.ts");
+  assert.equal(personName("egon@collaktiv.se"), "Egon");
+  assert.equal(personName("vilmer.svensson@collaktiv.se"), "Vilmer");
+  assert.equal(personName(null), "");
+});
