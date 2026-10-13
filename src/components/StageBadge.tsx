@@ -9,7 +9,7 @@ export function StageBadge({ stage }: { stage: Stage }) {
 }
 
 export function ScoreBadge({ score }: { score: number }) {
-  const color = score >= 70 ? "bg-accent text-brand-dark" : score >= 40 ? "bg-accent-light text-brand" : "bg-gray-100 text-gray-600";
+  const color = score >= 70 ? "bg-accent text-brand-dark" : score >= 40 ? "bg-accent-light text-brand" : "bg-line text-muted";
   return (
     <span className={`inline-flex h-7 min-w-7 shrink-0 items-center justify-center rounded-lg px-1 text-xs font-bold ${color}`} title="Prioritetspoäng">
       {score}

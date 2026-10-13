@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
@@ -29,10 +30,10 @@ export function Sidebar({ userName }: { userName: string }) {
   }, [router]);
 
   return (
-    <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-gray-200 bg-gray-50/60 px-3 py-5 lg:flex">
+    <aside className="fixed inset-y-0 left-0 z-30 hidden w-60 flex-col border-r border-line bg-secondary px-3 py-5 lg:flex">
       <Link href="/" className="mb-6 flex items-center gap-2 px-2">
-        <span className="h-8 w-8 rounded-xl bg-brand" />
-        <span className="text-lg font-bold tracking-tight">Collaktiv CRM</span>
+        <Image src="/collaktiv-mark.svg" alt="" width={35} height={28} priority />
+        <span className="text-lg font-extrabold tracking-tight text-brand">Collaktiv CRM</span>
       </Link>
 
       <form
@@ -58,7 +59,7 @@ export function Sidebar({ userName }: { userName: string }) {
               <Link
                 href={it.href}
                 className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-                  isActive(pathname, it.href) ? "bg-accent-light text-brand" : "text-gray-600 hover:bg-gray-100"
+                  isActive(pathname, it.href) ? "bg-accent-light text-brand" : "text-muted hover:bg-line"
                 }`}
               >
                 <NavIcon d={it.icon} className="h-5 w-5" />
@@ -70,7 +71,7 @@ export function Sidebar({ userName }: { userName: string }) {
             <Link
               href="/import"
               className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
-                isActive(pathname, "/import") ? "bg-accent-light text-brand" : "text-gray-600 hover:bg-gray-100"
+                isActive(pathname, "/import") ? "bg-accent-light text-brand" : "text-muted hover:bg-line"
               }`}
             >
               <NavIcon d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" className="h-5 w-5" />
@@ -81,12 +82,12 @@ export function Sidebar({ userName }: { userName: string }) {
       </nav>
 
       <div className="mt-auto flex items-center justify-between rounded-xl px-3 py-2 text-sm">
-        <span className="font-semibold text-gray-700">{userName}</span>
+        <span className="font-semibold text-ink">{userName}</span>
         <form action={signOut}>
-          <button className="text-xs font-semibold text-gray-500 hover:text-gray-800">Logga ut</button>
+          <button className="text-xs font-semibold text-muted hover:text-ink">Logga ut</button>
         </form>
       </div>
-      <p className="px-3 text-[11px] text-gray-400">Tips: tryck L för att logga, / för att söka</p>
+      <p className="px-3 text-[11px] text-muted">Tips: tryck L för att logga, / för att söka</p>
     </aside>
   );
 }

@@ -33,7 +33,7 @@ export function MoveSheet({ company, sideTrack, pending, error, onPick, onConfir
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               <p className="font-semibold">Flytta {company.name}</p>
-              <button type="button" onClick={onClose} className="text-sm font-semibold text-gray-500">Stäng</button>
+              <button type="button" onClick={onClose} className="text-sm font-semibold text-muted">Stäng</button>
             </div>
             {next && (
               <button type="button" className="btn-primary w-full" disabled={pending} onClick={() => onPick(next)}>
@@ -47,7 +47,7 @@ export function MoveSheet({ company, sideTrack, pending, error, onPick, onConfir
                 </button>
               ))}
             </div>
-            <div className="grid grid-cols-2 gap-2 border-t border-gray-100 pt-3">
+            <div className="grid grid-cols-2 gap-2 border-t border-line pt-3">
               {company.stage !== "aterkom" && (
                 <button type="button" className="chip justify-center border-purple-200 bg-purple-50 text-purple-800" onClick={() => onPick("aterkom")}>
                   Återkom senare

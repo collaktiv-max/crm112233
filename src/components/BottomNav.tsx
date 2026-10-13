@@ -12,7 +12,7 @@ export function BottomNav() {
     <li key={it.href}>
       <Link
         href={it.href}
-        className={`flex flex-col items-center gap-0.5 px-3 py-2 text-[11px] font-semibold ${isActive(pathname, it.href) ? "text-brand" : "text-gray-500"}`}
+        className={`flex flex-col items-center gap-0.5 px-3 py-2 text-[11px] font-semibold ${isActive(pathname, it.href) ? "text-brand" : "text-muted"}`}
       >
         <NavIcon d={it.icon} />
         {it.label}
@@ -21,7 +21,7 @@ export function BottomNav() {
   );
 
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-gray-200 bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
+    <nav className="fixed inset-x-0 bottom-0 z-40 border-t border-line bg-white/95 pb-[env(safe-area-inset-bottom)] backdrop-blur lg:hidden">
       <ul className="mx-auto flex max-w-3xl items-end justify-around px-2">
         {item(a)}
         {item(b)}

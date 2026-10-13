@@ -22,8 +22,8 @@ function Bars({ rows, max }: { rows: { label: string; value: number }[]; max?: n
     <ul className="space-y-1.5">
       {rows.map((r) => (
         <li key={r.label} className="grid grid-cols-[7.5rem_1fr_2rem] items-center gap-2 text-sm" title={`${r.label}: ${r.value}`}>
-          <span className="truncate text-gray-600">{r.label}</span>
-          <span className="h-3 rounded-r bg-gray-100">
+          <span className="truncate text-muted">{r.label}</span>
+          <span className="h-3 rounded-r bg-line">
             {r.value > 0 && <span className="block h-3 rounded-r bg-brand" style={{ width: `${(r.value / top) * 100}%` }} />}
           </span>
           <span className="text-right font-semibold tabular-nums">{r.value}</span>
@@ -37,8 +37,8 @@ function Tile({ value, label, sub }: { value: string; label: string; sub?: strin
   return (
     <div className="card p-3">
       <p className="text-2xl font-bold tabular-nums">{value}</p>
-      <p className="text-xs font-semibold text-gray-600">{label}</p>
-      {sub && <p className="mt-0.5 text-xs text-gray-500">{sub}</p>}
+      <p className="text-xs font-semibold text-muted">{label}</p>
+      {sub && <p className="mt-0.5 text-xs text-muted">{sub}</p>}
     </div>
   );
 }
@@ -86,12 +86,12 @@ export default async function DashboardPage() {
         <div className="flex items-end justify-between">
           <div>
             <p className="text-4xl font-bold tabular-nums text-brand">
-              {signed}<span className="text-xl text-gray-500"> / {GOAL_PARTNERS}</span>
+              {signed}<span className="text-xl text-muted"> / {GOAL_PARTNERS}</span>
             </p>
-            <p className="text-sm font-semibold text-gray-700">signerade och betalande partners</p>
+            <p className="text-sm font-semibold text-ink">signerade och betalande partners</p>
           </div>
-          <p className="text-right text-sm text-gray-600">
-            <span className="block text-lg font-bold tabular-nums text-gray-900">{perWeek.toLocaleString("sv-SE", { maximumFractionDigits: 1 })}/v</span>
+          <p className="text-right text-sm text-muted">
+            <span className="block text-lg font-bold tabular-nums text-ink">{perWeek.toLocaleString("sv-SE", { maximumFractionDigits: 1 })}/v</span>
             behövs · {daysLeft} dagar kvar
           </p>
         </div>
@@ -122,7 +122,7 @@ export default async function DashboardPage() {
       <section className="card">
         <h2 className="h2 mb-3">Förlust-anledningar</h2>
         {lost.size === 0 ? (
-          <p className="text-sm text-gray-500">Inga förlorade ännu.</p>
+          <p className="text-sm text-muted">Inga förlorade ännu.</p>
         ) : (
           <Bars rows={[...lost.entries()].sort((a, b) => b[1] - a[1]).map(([label, value]) => ({ label, value }))} />
         )}
@@ -138,7 +138,7 @@ export default async function DashboardPage() {
       <section className="flex flex-col gap-2 lg:hidden">
         <Link href="/import" className="btn-secondary">Importera CSV</Link>
         <form action={signOut}>
-          <button className="btn-secondary w-full text-gray-500">Logga ut</button>
+          <button className="btn-secondary w-full text-muted">Logga ut</button>
         </form>
       </section>
     </div>

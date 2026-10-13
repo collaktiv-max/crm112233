@@ -20,7 +20,10 @@ Standard 500 kr/mån, Premium 700 kr/mån, 6-månaderspaket. Founding Partner ge
 Next.js 16 (App Router, `src/proxy.ts` i stället för middleware) + Supabase (Postgres, Auth, RLS)
 + Tailwind v4. Deploy på Vercel. PWA via `src/app/manifest.ts`.
 
-Design: Montserrat, knappar `#166849` (`brand`), accent `#8fd34f` (`accent`), vit bakgrund.
+Design: grafisk profil från collaktiv.se. Montserrat, knappar `#166849` (`brand`), accent `#8fd34f` (`accent`),
+vit bakgrund, text `ink` (#0f2a1f), sekundärtext `muted` (#5b7168), linjer `line` (#e2ece7), ljus yta `secondary`
+(#f2faf7), `mint` (#c3ecd9). Använd dessa i stället för Tailwinds `gray-*` (undantag: `gray-300` på kontrollkanter).
+Logga: `public/collaktiv-mark.svg` (C + pil, färgerna ändras aldrig).
 Komponentklasser (`btn-primary`, `input`, `card`, `chip-on` …) definieras som `@utility` i `src/app/globals.css`.
 
 ## Pipeline

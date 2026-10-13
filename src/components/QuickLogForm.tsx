@@ -89,7 +89,7 @@ export function QuickLogForm({ companies, initialCompanyId }: { companies: Picka
           <div className="card flex items-center justify-between p-3">
             <div>
               <p className="font-semibold">{company.name}</p>
-              <p className="text-xs text-gray-500">{STAGE_LABELS[company.stage]} · {company.network ?? company.municipality ?? "–"}</p>
+              <p className="text-xs text-muted">{STAGE_LABELS[company.stage]} · {company.network ?? company.municipality ?? "–"}</p>
             </div>
             <button type="button" className="text-sm font-semibold text-brand" onClick={() => { setCompanyId(""); setStage(""); }}>
               Byt
@@ -98,12 +98,12 @@ export function QuickLogForm({ companies, initialCompanyId }: { companies: Picka
         ) : (
           <div className="space-y-2">
             <input className="input" type="search" placeholder="Sök företag…" value={search} onChange={(e) => setSearch(e.target.value)} autoFocus />
-            <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-200">
+            <ul className="divide-y divide-line rounded-2xl border border-line">
               {matches.map((c) => (
                 <li key={c.id}>
-                  <button type="button" className="flex w-full items-center justify-between px-3 py-3 text-left active:bg-gray-50" onClick={() => setCompanyId(c.id)}>
+                  <button type="button" className="flex w-full items-center justify-between px-3 py-3 text-left active:bg-secondary" onClick={() => setCompanyId(c.id)}>
                     <span className="font-medium">{c.name}</span>
-                    <span className="text-xs text-gray-500">{c.network ?? c.municipality}</span>
+                    <span className="text-xs text-muted">{c.network ?? c.municipality}</span>
                   </button>
                 </li>
               ))}
@@ -140,7 +140,7 @@ export function QuickLogForm({ companies, initialCompanyId }: { companies: Picka
               ))}
             </div>
             <details className="mt-2">
-              <summary className="cursor-pointer text-xs font-semibold text-gray-500">Invändning?{objection && `: ${objection}`}</summary>
+              <summary className="cursor-pointer text-xs font-semibold text-muted">Invändning?{objection && `: ${objection}`}</summary>
               <div className="mt-2 flex flex-wrap gap-2">
                 {OBJECTIONS.map((o) => (
                   <button key={o} type="button" onClick={() => setObjection(o === objection ? "" : o)} className={objection === o ? "chip-on" : "chip-off"}>
@@ -163,7 +163,7 @@ export function QuickLogForm({ companies, initialCompanyId }: { companies: Picka
             </div>
             {effectiveStage === "forlorad" && (
               <div className="mt-3 flex flex-wrap gap-2">
-                <span className="w-full text-xs font-semibold text-gray-500">Anledning *</span>
+                <span className="w-full text-xs font-semibold text-muted">Anledning *</span>
                 {LOST_REASONS.map((r) => (
                   <button key={r} type="button" onClick={() => setLostReason(r)} className={lostReason === r ? "chip-on" : "chip-off"}>
                     {r}

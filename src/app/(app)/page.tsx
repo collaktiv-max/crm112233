@@ -57,11 +57,11 @@ export default async function TodayPage() {
   // Visar de första och fäller ihop resten så att listan inte blir oändlig på mobilen.
   const taskList = (list: TaskWithCompany[], visible = 6) => (
     <>
-      <ul className="divide-y divide-gray-100">{list.slice(0, visible).map(item)}</ul>
+      <ul className="divide-y divide-line">{list.slice(0, visible).map(item)}</ul>
       {list.length > visible && (
         <details className="group">
           <summary className="cursor-pointer list-none py-2 text-sm font-semibold text-brand group-open:hidden">Visa {list.length - visible} till</summary>
-          <ul className="divide-y divide-gray-100">{list.slice(visible).map(item)}</ul>
+          <ul className="divide-y divide-line">{list.slice(visible).map(item)}</ul>
         </details>
       )}
     </>
@@ -71,17 +71,17 @@ export default async function TodayPage() {
     <div className="space-y-6">
       <header className="flex items-end justify-between gap-4">
         <div>
-          <p className="text-sm font-medium capitalize text-gray-500">{weekday}</p>
+          <p className="text-sm font-medium capitalize text-muted">{weekday}</p>
           <h1 className="h1">Idag</h1>
         </div>
         <div className="flex gap-2">
-          <div className="hidden rounded-xl border border-gray-200 px-3 py-2 text-right lg:block">
+          <div className="hidden rounded-xl border border-line px-3 py-2 text-right lg:block">
             <span className={`block text-lg font-bold leading-none ${overdue.length ? "text-red-600" : ""}`}>{overdue.length}</span>
-            <span className="text-[10px] font-semibold uppercase text-gray-500">försenade</span>
+            <span className="text-[10px] font-semibold uppercase text-muted">försenade</span>
           </div>
-          <div className="hidden rounded-xl border border-gray-200 px-3 py-2 text-right lg:block">
+          <div className="hidden rounded-xl border border-line px-3 py-2 text-right lg:block">
             <span className="block text-lg font-bold leading-none">{dueToday.length + meetings.length}</span>
-            <span className="text-[10px] font-semibold uppercase text-gray-500">idag</span>
+            <span className="text-[10px] font-semibold uppercase text-muted">idag</span>
           </div>
           <Link href="/dashboard" className="rounded-xl bg-accent-light px-3 py-2 text-right">
             <span className="block text-lg font-bold leading-none text-brand">
@@ -103,7 +103,7 @@ export default async function TodayPage() {
                   <li key={c.id}>
                     <Link href={`/foretag/${c.id}`} className="card flex items-center justify-between border-amber-300 bg-amber-50">
                       <span className="font-semibold">{c.name}</span>
-                      <span className="text-sm text-gray-600">{c.next_step ?? "Genomgång"}</span>
+                      <span className="text-sm text-muted">{c.next_step ?? "Genomgång"}</span>
                     </Link>
                   </li>
                 ))}
@@ -121,7 +121,7 @@ export default async function TodayPage() {
           <section>
             <h2 className="h2 mb-1">Att göra idag ({dueToday.length})</h2>
             {dueToday.length === 0 ? (
-              <p className="card text-sm text-gray-500">Inga uppföljningar idag. Dags att besöka några prospekt! 🚌</p>
+              <p className="card text-sm text-muted">Inga uppföljningar idag. Dags att besöka några prospekt! 🚌</p>
             ) : (
               taskList(dueToday)
             )}
@@ -136,7 +136,7 @@ export default async function TodayPage() {
             </Link>
           </div>
           {daily.length === 0 ? (
-            <p className="card text-sm text-gray-500">
+            <p className="card text-sm text-muted">
               Inga prospekt ännu. <Link href="/import" className="font-semibold text-brand">Importera</Link> eller{" "}
               <Link href="/foretag/ny" className="font-semibold text-brand">lägg till</Link>.
             </p>
@@ -144,14 +144,14 @@ export default async function TodayPage() {
             <div className="space-y-4">
               {[...groups.entries()].map(([area, companies]) => (
                 <div key={area}>
-                  <p className="mb-1 text-xs font-bold text-gray-700">📍 {area}</p>
-                  <ul className="divide-y divide-gray-100 rounded-2xl border border-gray-200">
+                  <p className="mb-1 text-xs font-bold text-ink">📍 {area}</p>
+                  <ul className="divide-y divide-line rounded-2xl border border-line">
                     {companies.map((c) => (
                       <li key={c.id} className="flex items-center gap-3 px-3 py-2.5">
                         {c.stage === "aterkom" ? <StageBadge stage={c.stage} /> : <ScoreBadge score={c.priority_score} />}
                         <Link href={`/foretag/${c.id}`} className="min-w-0 flex-1">
                           <p className="truncate text-sm font-semibold">{c.name}</p>
-                          <p className="truncate text-xs text-gray-500">
+                          <p className="truncate text-xs text-muted">
                             {[c.category, c.address].filter(Boolean).join(" · ") || "–"}
                             {c.stage === "aterkom" && c.revisit_date && ` · återkom ${formatDate(c.revisit_date)}`}
                           </p>

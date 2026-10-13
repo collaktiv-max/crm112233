@@ -37,7 +37,7 @@ export function ImportClient() {
       <label className="card flex cursor-pointer flex-col items-center gap-2 border-dashed py-8 text-center">
         <span className="text-3xl">📄</span>
         <span className="font-semibold">{fileName || "Välj CSV-fil"}</span>
-        <span className="text-xs text-gray-500">Kolumner som namn, kommun, kategori, nätverk, kontaktperson, mejl, telefon, steg…</span>
+        <span className="text-xs text-muted">Kolumner som namn, kommun, kategori, nätverk, kontaktperson, mejl, telefon, steg…</span>
         <input type="file" accept=".csv,text/csv" className="hidden" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
       </label>
 
@@ -62,7 +62,7 @@ export function ImportClient() {
             <h2 className="h2 mb-2">Kolumner</h2>
             <ul className="grid grid-cols-2 gap-1">
               {headers.map((h) => (
-                <li key={h} className={mapping[h] ? "" : "text-gray-400"}>
+                <li key={h} className={mapping[h] ? "" : "text-muted"}>
                   {h} → {mapping[h] ?? "ignoreras"}
                 </li>
               ))}
@@ -71,11 +71,11 @@ export function ImportClient() {
 
           <section>
             <h2 className="h2 mb-2">Förhandsvisning ({rows.length} företag)</h2>
-            <ul className="max-h-72 divide-y divide-gray-100 overflow-y-auto rounded-2xl border border-gray-200 text-sm">
+            <ul className="max-h-72 divide-y divide-line overflow-y-auto rounded-2xl border border-line text-sm">
               {rows.slice(0, 100).map((r) => (
                 <li key={r.company.id} className="flex justify-between gap-2 px-3 py-2">
                   <span className="truncate font-medium">{r.company.name}</span>
-                  <span className="shrink-0 text-xs text-gray-500">
+                  <span className="shrink-0 text-xs text-muted">
                     {[r.company.municipality, STAGE_LABELS[r.company.stage], r.contact?.name].filter(Boolean).join(" · ")}
                   </span>
                 </li>

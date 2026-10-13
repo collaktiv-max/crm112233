@@ -41,9 +41,9 @@ export function TaskItem({ id, title, dueDate, done, company }: Props) {
         )}
       </button>
       <div className="min-w-0 flex-1">
-        <p className={`text-sm font-medium ${optimisticDone ? "text-gray-400 line-through" : ""}`}>{title}</p>
+        <p className={`text-sm font-medium ${optimisticDone ? "text-muted line-through" : ""}`}>{title}</p>
         <div className="mt-1 flex items-center justify-between gap-2">
-          <p className="min-w-0 truncate text-xs text-gray-500">
+          <p className="min-w-0 truncate text-xs text-muted">
             {company && (
               <Link href={`/foretag/${company.id}`} className="font-semibold text-brand">
                 {company.name}
@@ -62,7 +62,7 @@ export function TaskItem({ id, title, dueDate, done, company }: Props) {
               <button
                 type="button"
                 onClick={() => start(() => postponeTask(id, addDays(t, 1)))}
-                className="rounded-lg border border-gray-200 px-2 py-1 text-xs font-semibold text-gray-600"
+                className="rounded-lg border border-line px-2 py-1 text-xs font-semibold text-muted"
               >
                 Imorgon
               </button>

@@ -44,7 +44,7 @@ export const STAGE_DONE_WHEN: Record<Stage, string> = {
 };
 
 export const STAGE_COLORS: Record<Stage, string> = {
-  prospekt: "bg-gray-100 text-gray-700",
+  prospekt: "bg-line text-ink",
   kontaktad: "bg-sky-100 text-sky-800",
   dialog: "bg-indigo-100 text-indigo-800",
   mote_bokat: "bg-amber-100 text-amber-800",

@@ -31,7 +31,7 @@ export function StageMover({ companyId, stage }: { companyId: string; stage: Sta
               title={STAGE_LABELS[s]}
               onClick={() => s !== stage && go(s)}
               className={`h-2 w-full rounded-full ${
-                s === stage ? "bg-brand" : currentIndex >= 0 && i < currentIndex ? "bg-accent" : "bg-gray-200"
+                s === stage ? "bg-brand" : currentIndex >= 0 && i < currentIndex ? "bg-accent" : "bg-line"
               }`}
             />
           </li>
@@ -42,7 +42,7 @@ export function StageMover({ companyId, stage }: { companyId: string; stage: Sta
           <button type="button" className="btn-primary flex-1" disabled={pending} onClick={() => go(next)}>
             → {STAGE_LABELS[next]}
           </button>
-          {STAGE_DONE_WHEN[stage] && <p className="flex-1 text-xs text-gray-500">Klart när: {STAGE_DONE_WHEN[stage]}</p>}
+          {STAGE_DONE_WHEN[stage] && <p className="flex-1 text-xs text-muted">Klart när: {STAGE_DONE_WHEN[stage]}</p>}
         </div>
       )}
       <div className="flex flex-wrap gap-2">

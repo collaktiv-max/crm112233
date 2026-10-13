@@ -5,7 +5,7 @@ export default function ImportPage() {
     <div className="mx-auto max-w-2xl space-y-4">
       <header>
         <h1 className="h1">Importera</h1>
-        <p className="text-sm text-gray-500">
+        <p className="text-sm text-muted">
           Börja med dina 18 betalande partners och UF-årets företag. Dubbletter (samma namn och kommun) hoppas över.
         </p>
       </header>

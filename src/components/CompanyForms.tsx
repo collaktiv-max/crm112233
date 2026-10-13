@@ -82,7 +82,7 @@ export function DeleteContactButton({ id }: { id: string }) {
     <button
       type="button"
       disabled={pending}
-      className="text-xs text-gray-400 hover:text-red-600"
+      className="text-xs text-muted hover:text-red-600"
       onClick={() => confirm("Ta bort kontaktpersonen?") && start(() => deleteContact(id))}
     >
       Ta bort
@@ -136,7 +136,7 @@ function ContractForm({ companyId, contract, close }: { companyId: string; contr
           <input className="input" name="end_date" type="date" defaultValue={contract?.end_date ?? ""} />
         </div>
       </div>
-      <p className="text-xs text-gray-500">Betaldatum ifyllt flyttar företaget till Betald partner.</p>
+      <p className="text-xs text-muted">Betaldatum ifyllt flyttar företaget till Betald partner.</p>
       {state && "error" in state && <p className="text-sm text-red-700">{state.error}</p>}
       <div className="flex gap-2">
         <button type="button" className="btn-secondary flex-1" onClick={close}>Avbryt</button>
@@ -145,7 +145,7 @@ function ContractForm({ companyId, contract, close }: { companyId: string; contr
       {contract && (
         <button
           type="button"
-          className="w-full text-xs text-gray-400 hover:text-red-600"
+          className="w-full text-xs text-muted hover:text-red-600"
           disabled={del}
           onClick={() => confirm("Ta bort avtalet?") && startDel(() => deleteContract(contract.id))}
         >

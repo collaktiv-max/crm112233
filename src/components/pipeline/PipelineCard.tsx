@@ -33,7 +33,7 @@ export function PipelineCard({ company: c, compact, draggable, dragging, onDragS
       onDragEnd={onDragEnd}
       className={`group relative rounded-xl border bg-white shadow-sm transition hover:shadow-md ${
         dragging ? "opacity-40" : ""
-      } ${c.overdueTasks > 0 || overdueStep ? "border-l-4 border-l-red-500 border-gray-200" : stale ? "border-l-4 border-l-amber-400 border-gray-200" : "border-gray-200"} ${
+      } ${c.overdueTasks > 0 || overdueStep ? "border-l-4 border-l-red-500 border-line" : stale ? "border-l-4 border-l-amber-400 border-line" : "border-line"} ${
         draggable ? "cursor-grab active:cursor-grabbing" : ""
       }`}
     >
@@ -43,13 +43,13 @@ export function PipelineCard({ company: c, compact, draggable, dragging, onDragS
           <div className="min-w-0 flex-1">
             <p className="truncate text-sm font-semibold leading-tight">{c.name}</p>
             {!compact && (
-              <p className="truncate text-xs text-gray-500">{[c.category, area].filter(Boolean).join(" · ") || "–"}</p>
+              <p className="truncate text-xs text-muted">{[c.category, area].filter(Boolean).join(" · ") || "–"}</p>
             )}
           </div>
         </div>
 
         {!compact && c.contact && (
-          <p className="mt-2 truncate text-xs text-gray-700">
+          <p className="mt-2 truncate text-xs text-ink">
             👤 {c.contact.name}
             {c.contact.is_decision_maker && <span className="ml-1 font-semibold text-brand">· beslutar</span>}
           </p>
@@ -60,14 +60,14 @@ export function PipelineCard({ company: c, compact, draggable, dragging, onDragS
         ) : c.stage === "forlorad" && c.lost_reason ? (
           <p className="mt-1.5 truncate text-xs text-red-700">✕ {c.lost_reason}</p>
         ) : c.next_step || c.next_step_date ? (
-          <p className={`mt-1.5 truncate text-xs ${overdueStep ? "font-semibold text-red-600" : "text-gray-700"}`}>
+          <p className={`mt-1.5 truncate text-xs ${overdueStep ? "font-semibold text-red-600" : "text-ink"}`}>
             → {c.next_step ?? "Nästa steg"}
-            {c.next_step_date && <span className={overdueStep ? "" : "text-gray-500"}> · {relativeDay(c.next_step_date, t)}</span>}
+            {c.next_step_date && <span className={overdueStep ? "" : "text-muted"}> · {relativeDay(c.next_step_date, t)}</span>}
           </p>
         ) : null}
 
         {!compact && (
-          <p className="mt-1.5 truncate text-[11px] text-gray-500">
+          <p className="mt-1.5 truncate text-[11px] text-muted">
             {c.stage !== "prospekt" && (
               <span className={stale ? "font-semibold text-amber-700" : ""}>{days} d i steget</span>
             )}
@@ -105,7 +105,7 @@ export function PipelineCard({ company: c, compact, draggable, dragging, onDragS
           type="button"
           onClick={onMove}
           aria-label={`Flytta ${c.name}`}
-          className="rounded-lg border border-gray-200 bg-white px-2 py-1 text-[11px] font-semibold text-gray-600 hover:bg-gray-50"
+          className="rounded-lg border border-line bg-white px-2 py-1 text-[11px] font-semibold text-muted hover:bg-secondary"
         >
           ⇄
         </button>
