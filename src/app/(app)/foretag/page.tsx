@@ -4,6 +4,7 @@ import { createClient } from "@/lib/supabase/server";
 import { isStage } from "@/lib/constants";
 import { formatDate, relativeDay, today } from "@/lib/dates";
 import { FilterBar } from "@/components/FilterBar";
+import { DbNotice } from "@/components/DbNotice";
 import { ScoreBadge, StageBadge } from "@/components/StageBadge";
 import type { Company } from "@/lib/types";
 
@@ -30,7 +31,7 @@ export default async function CompaniesPage({ searchParams }: { searchParams: Pr
   if (sp.poang && Number(sp.poang) > 0) query = query.gte("priority_score", Number(sp.poang));
 
   const sort = SORTS[sp.sort ?? ""] ?? SORTS.poang;
-  const { data, count } = await query
+  const { data, count, error } = await query
     .order(sort.column, { ascending: sort.ascending, nullsFirst: false })
     .order("name")
     .limit(300)
@@ -47,6 +48,8 @@ export default async function CompaniesPage({ searchParams }: { searchParams: Pr
           <Link href="/foretag/ny" className="btn-primary py-2">+ Nytt</Link>
         </div>
       </header>
+
+      <DbNotice errors={[error]} />
 
       <Suspense>
         <FilterBar />

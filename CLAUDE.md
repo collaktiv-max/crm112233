@@ -71,3 +71,6 @@ npx supabase db reset  # kör om migrationerna lokalt
 ```
 
 Nya schemaändringar = ny fil i `supabase/migrations/`, ändra aldrig en redan körd migration.
+`20261019000000_repair_setup.sql` är idempotent och innehåller hela schemat – det är filen användaren
+kör manuellt i SQL Editor (statussidan `/status` serverar den via `/status/sql`). Håll den uppdaterad
+med varje schemaändring, och visa databasfel med `DbNotice`/`explainDbError` i stället för tomma listor.

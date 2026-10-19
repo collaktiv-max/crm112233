@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { ACTIVITY_TYPES, CHANNELS, PACKAGES, STAGES, isStage, type Stage } from "@/lib/constants";
 import type { ImportRow } from "@/lib/csv";
+import { explainDbError } from "@/lib/dbErrors";
 
 export type ActionResult = { error: string } | { ok: true } | null;
 
@@ -83,7 +84,7 @@ export async function createCompany(_prev: ActionResult, fd: FormData): Promise<
     .insert({ ...fields, stage, lost_reason, revisit_date })
     .select("id")
     .single();
-  if (error) return { error: error.message };
+  if (error) return { error: explainDbError(error)! };
 
   const contactName = str(fd, "contact_name");
   if (contactName) {
@@ -106,7 +107,7 @@ export async function updateCompany(id: string, _prev: ActionResult, fd: FormDat
   if (!fields.name) return { error: "Namn krävs." };
   const supabase = await createClient();
   const { error } = await supabase.from("companies").update(fields).eq("id", id);
-  if (error) return { error: error.message };
+  if (error) return { error: explainDbError(error)! };
   refresh();
   redirect(`/foretag/${id}`);
 }
@@ -134,7 +135,7 @@ export async function moveStage(
   if (stage === "forlorad") patch.lost_reason = lost_reason;
   if (stage === "aterkom") patch.revisit_date = revisit_date;
   const { error } = await supabase.from("companies").update(patch).eq("id", id);
-  if (error) return { error: error.message };
+  if (error) return { error: explainDbError(error)! };
   refresh();
   return { ok: true };
 }
@@ -176,7 +177,7 @@ export async function quickLog(_prev: ActionResult, fd: FormData): Promise<Actio
     objection: str(fd, "objection"),
     note: str(fd, "note"),
   });
-  if (actErr) return { error: actErr.message };
+  if (actErr) return { error: explainDbError(actErr)! };
 
   const patch: Record<string, unknown> = { next_step, next_step_date };
   if (stage) {
@@ -185,7 +186,7 @@ export async function quickLog(_prev: ActionResult, fd: FormData): Promise<Actio
     if (stage === "aterkom") patch.revisit_date = revisit_date;
   }
   const { error: compErr } = await supabase.from("companies").update(patch).eq("id", company_id);
-  if (compErr) return { error: compErr.message };
+  if (compErr) return { error: explainDbError(compErr)! };
 
   // Ett uttryckligt nästa steg ersätter stegets automatiska påminnelse
   // (utom inför bokade möten, där påminnelsen dagen före behålls).
@@ -233,7 +234,7 @@ export async function createTask(_prev: ActionResult, fd: FormData): Promise<Act
   const { error } = await supabase
     .from("tasks")
     .insert({ title, due_date, company_id: str(fd, "company_id") });
-  if (error) return { error: error.message };
+  if (error) return { error: explainDbError(error)! };
   refresh();
   return { ok: true };
 }
@@ -256,7 +257,7 @@ export async function addContact(_prev: ActionResult, fd: FormData): Promise<Act
     preferred_channel: oneOf(str(fd, "preferred_channel"), CHANNELS),
     is_decision_maker: bool(fd, "is_decision_maker"),
   });
-  if (error) return { error: error.message };
+  if (error) return { error: explainDbError(error)! };
   refresh();
   return { ok: true };
 }
@@ -291,7 +292,7 @@ export async function saveContract(_prev: ActionResult, fd: FormData): Promise<A
   const { error } = id
     ? await supabase.from("contracts").update(row).eq("id", id)
     : await supabase.from("contracts").insert(row);
-  if (error) return { error: error.message };
+  if (error) return { error: explainDbError(error)! };
 
   // Betalning registrerad → Betald partner (om företaget inte redan är längre fram).
   if (row.paid_at) {
@@ -321,7 +322,7 @@ export async function importCompanies(
 ): Promise<{ inserted: number; skipped: number; error?: string }> {
   const supabase = await createClient();
   const { data: existing, error: exErr } = await supabase.from("companies").select("name, municipality");
-  if (exErr) return { inserted: 0, skipped: 0, error: exErr.message };
+  if (exErr) return { inserted: 0, skipped: 0, error: explainDbError(exErr)! };
 
   const key = (name: string, municipality: string | null) =>
     `${name.trim().toLowerCase()}|${(municipality ?? "").trim().toLowerCase()}`;
@@ -344,12 +345,12 @@ export async function importCompanies(
     .from("companies")
     .insert(fresh.map((r) => r.company))
     .select("id");
-  if (error) return { inserted: 0, skipped, error: error.message };
+  if (error) return { inserted: 0, skipped, error: explainDbError(error)! };
 
   const contacts = fresh.flatMap((r) => (r.contact ? [{ ...r.contact, company_id: r.company.id }] : []));
   if (contacts.length > 0) {
     const { error: cErr } = await supabase.from("contacts").insert(contacts);
-    if (cErr) return { inserted: inserted.length, skipped, error: `Kontaktpersoner: ${cErr.message}` };
+    if (cErr) return { inserted: inserted.length, skipped, error: `Kontaktpersoner: ${explainDbError(cErr)}` };
   }
 
   refresh();

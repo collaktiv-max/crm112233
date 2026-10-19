@@ -10,6 +10,7 @@ import {
   STAGE_LABELS,
   type Stage,
 } from "@/lib/constants";
+import { DbNotice } from "@/components/DbNotice";
 import { addDays, daysBetween, personName, today } from "@/lib/dates";
 
 type Row = { stage: Stage; lost_reason: string | null };
@@ -81,6 +82,9 @@ export default async function DashboardPage() {
   return (
     <div className="mx-auto max-w-6xl space-y-6 lg:grid lg:grid-cols-2 lg:items-start lg:gap-6 lg:space-y-0">
       <h1 className="h1 lg:col-span-2">Mål</h1>
+      <div className="lg:col-span-2">
+        <DbNotice errors={[companiesRes.error, contractsRes.error, activitiesRes.error]} />
+      </div>
 
       <section className="card space-y-3 border-brand/30 bg-accent-light/40 lg:col-span-2">
         <div className="flex items-end justify-between">
@@ -137,6 +141,7 @@ export default async function DashboardPage() {
 
       <section className="flex flex-col gap-2 lg:hidden">
         <Link href="/import" className="btn-secondary">Importera CSV</Link>
+        <Link href="/status" className="btn-secondary">Status</Link>
         <form action={signOut}>
           <button className="btn-secondary w-full text-gray-500">Logga ut</button>
         </form>

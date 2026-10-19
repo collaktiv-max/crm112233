@@ -2,6 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { NETWORKS, type Package, type Stage } from "@/lib/constants";
 import { today } from "@/lib/dates";
 import { PipelineView } from "@/components/pipeline/PipelineView";
+import { DbNotice } from "@/components/DbNotice";
 import type { PipelineCompany } from "@/components/pipeline/types";
 
 type Row = Omit<PipelineCompany, "contact" | "contract" | "overdueTasks" | "openTasks"> & {
@@ -50,5 +51,10 @@ export default async function PipelinePage() {
     a.localeCompare(b, "sv"),
   );
 
-  return <PipelineView initial={companies} networks={networks} />;
+  return (
+    <>
+      <DbNotice errors={[companiesRes.error, tasksRes.error]} />
+      <PipelineView initial={companies} networks={networks} />
+    </>
+  );
 }

@@ -3,6 +3,7 @@ import { createClient } from "@/lib/supabase/server";
 import { addDays, formatDate, today } from "@/lib/dates";
 import { GOAL_PARTNERS, SIGNED_STAGES } from "@/lib/constants";
 import { TaskItem } from "@/components/TaskItem";
+import { DbNotice } from "@/components/DbNotice";
 import { ScoreBadge, StageBadge } from "@/components/StageBadge";
 import type { Company, Task } from "@/lib/types";
 
@@ -12,7 +13,7 @@ export default async function TodayPage() {
   const supabase = await createClient();
   const t = today();
 
-  const [tasksRes, meetingsRes, prospectsRes, revisitRes, signedRes] = await Promise.all([
+  const [tasksRes, meetingsRes, prospectsRes, revisitRes, signedRes, memberRes] = await Promise.all([
     supabase
       .from("tasks")
       .select("*, companies(id, name)")
@@ -31,7 +32,11 @@ export default async function TodayPage() {
       .returns<Company[]>(),
     supabase.from("companies").select("*").eq("stage", "aterkom").lte("revisit_date", t).returns<Company[]>(),
     supabase.from("companies").select("id", { count: "exact", head: true }).in("stage", SIGNED_STAGES),
+    supabase.rpc("is_team_member"),
   ]);
+  // Icke-medlemmar får tomma svar från RLS i stället för fel – fånga det tydligt.
+  const notMember = !memberRes.error && memberRes.data === false ? { code: "42501", message: "not a team member" } : null;
+  const dbErrors = [memberRes.error, notMember, tasksRes.error, prospectsRes.error, signedRes.error];
 
   const tasks = tasksRes.data ?? [];
   const dueNow = tasks.filter((x) => x.due_date <= t);
@@ -91,6 +96,8 @@ export default async function TodayPage() {
           </Link>
         </div>
       </header>
+
+      <DbNotice errors={dbErrors} />
 
       {/* Mobil: staplat. Dator: uppgifter till vänster, Dagens lista till höger. */}
       <div className="grid gap-6 lg:grid-cols-2 lg:items-start lg:gap-8">

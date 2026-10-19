@@ -80,7 +80,16 @@ export function Sidebar({ userName }: { userName: string }) {
         </ul>
       </nav>
 
-      <div className="mt-auto flex items-center justify-between rounded-xl px-3 py-2 text-sm">
+      <Link
+        href="/status"
+        className={`mt-auto flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+          isActive(pathname, "/status") ? "bg-accent-light text-brand" : "text-gray-500 hover:bg-gray-100"
+        }`}
+      >
+        <NavIcon d="M9 12l2 2 4-4M12 21a9 9 0 100-18 9 9 0 000 18z" className="h-5 w-5" />
+        Status
+      </Link>
+      <div className="flex items-center justify-between rounded-xl px-3 py-2 text-sm">
         <span className="font-semibold text-gray-700">{userName}</span>
         <form action={signOut}>
           <button className="text-xs font-semibold text-gray-500 hover:text-gray-800">Logga ut</button>

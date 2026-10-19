@@ -7,9 +7,10 @@ mobilen · Idag-vy med uppföljningar och Dagens lista · CSV-import · dashboar
 
 ## Kom igång (produktion)
 
-1. **Supabase:** skapa ett projekt på [supabase.com](https://supabase.com). Kör migrationerna i tur och ordning, antingen
-   - `npx supabase link --project-ref <ref> && npx supabase db push`, eller
-   - klistra in `supabase/migrations/20261006000000_init.sql` i SQL Editor.
+1. **Supabase:** skapa ett projekt på [supabase.com](https://supabase.com). Kör databasfilen, antingen
+   - klistra in `supabase/migrations/20261019000000_repair_setup.sql` i SQL Editor och tryck Run
+     (den skapar allt i en tom databas och reparerar en befintlig – går att köra flera gånger), eller
+   - `npx supabase link --project-ref <ref> && npx supabase db push`.
 2. **Användare:** Authentication → Users → *Add user* (mejl + lösenord, *Auto confirm*).
    Stäng sedan av *Allow new users to sign up* under Authentication → Sign In / Providers.
 3. **Vercel:** importera repot, lägg in miljövariablerna från `.env.example`
@@ -27,6 +28,12 @@ npm run dev
 ```
 
 Skapa en lokal användare i Studio (http://127.0.0.1:54323) eller via admin-API:t.
+
+## Felsökning
+
+Öppna **Status** i appen (sidomenyn på dator, Mål → Status på mobil). Sidan kontrollerar kopplingen,
+tabellerna, schemaversionen och att du är med i teamet, och har en knapp som kopierar reparations-SQL:en
+plus en länk direkt till SQL Editor i rätt Supabase-projekt.
 
 ## Lägga till en kollega
 
