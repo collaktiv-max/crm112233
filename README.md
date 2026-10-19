@@ -47,7 +47,7 @@ Alla i teamet ser och redigerar samma data. För en ny person:
 
 `examples/partners-exempel.csv` visar formatet. Rubriker känns igen på svenska och engelska
 (namn, kommun, kategori, nätverk, adress, instagram, kontaktperson, roll, mejl, telefon, steg …).
-Välj standardsteg vid importen, t.ex. *Betald partner* för de 18 betalande och *Prospekt* för UF-listan.
+Välj standardsteg vid importen: *Prospekt* för nya listor, *Kontaktad* eller *Dialog* för företag ni redan pratat med (t.ex. UF-årets företag).
 Dubbletter (samma namn + kommun) hoppas över.
 
 ## Prioritetspoäng (0–100)

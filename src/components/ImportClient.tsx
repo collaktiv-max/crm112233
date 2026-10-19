@@ -10,8 +10,8 @@ import { STAGES, STAGE_LABELS, type Stage } from "@/lib/constants";
 export function ImportClient() {
   const [records, setRecords] = useState<Record<string, string>[]>([]);
   const [fileName, setFileName] = useState("");
-  const [defaultStage, setDefaultStage] = useState<Stage>("betald");
-  const [source, setSource] = useState("Befintlig partner");
+  const [defaultStage, setDefaultStage] = useState<Stage>("prospekt");
+  const [source, setSource] = useState("");
   const [result, setResult] = useState<{ inserted: number; skipped: number; error?: string } | null>(null);
   const [pending, start] = useTransition();
 
@@ -54,7 +54,7 @@ export function ImportClient() {
             </div>
             <div>
               <label className="label">Källa</label>
-              <input className="input" value={source} onChange={(e) => setSource(e.target.value)} />
+              <input className="input" value={source} placeholder="t.ex. UF-listan, Gävle City" onChange={(e) => setSource(e.target.value)} />
             </div>
           </section>
 
