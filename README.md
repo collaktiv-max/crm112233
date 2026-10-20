@@ -35,6 +35,16 @@ Skapa en lokal användare i Studio (http://127.0.0.1:54323) eller via admin-API:
 tabellerna, schemaversionen och att du är med i teamet, och har en knapp som kopierar reparations-SQL:en
 plus en länk direkt till SQL Editor i rätt Supabase-projekt.
 
+## Claude i CRM:et
+
+CRM:et är en MCP-server (`/api/mcp/<MCP_SECRET>`) som läggs till som egen koppling i claude.ai.
+Tillsammans med Gmail- och Google Kalender-kopplingarna kan Claude läsa och uppdatera CRM:et, sätta
+påminnelser i kalendern och skriva mejlutkast. Sätt `MCP_SECRET`, `MCP_USER_EMAIL` och
+`SUPABASE_SERVICE_ROLE_KEY` i Vercel och följ instruktionerna på sidan **Claude** i appen.
+
+Claude skickar aldrig mejl (bara utkast), ändrar aldrig betalstatus/avtal och raderar ingenting –
+det är inbyggt i verktygen, inte bara i instruktionerna.
+
 ## Lägga till en kollega
 
 Alla i teamet ser och redigerar samma data. För en ny person:

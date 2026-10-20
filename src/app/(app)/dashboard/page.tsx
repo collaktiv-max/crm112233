@@ -141,6 +141,7 @@ export default async function DashboardPage() {
 
       <section className="flex flex-col gap-2 lg:hidden">
         <Link href="/import" className="btn-secondary">Importera CSV</Link>
+        <Link href="/claude" className="btn-secondary">Koppla Claude</Link>
         <Link href="/status" className="btn-secondary">Status</Link>
         <form action={signOut}>
           <button className="btn-secondary w-full text-gray-500">Logga ut</button>

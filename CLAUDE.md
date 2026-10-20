@@ -59,6 +59,14 @@ Ny medlem: `insert into team_members (email) values ('namn@collaktiv.se');` + ko
   L = logga, / = sök), tabeller och flerkolumnslayout; mobil har `BottomNav`, listor och en flik per
   pipeline-steg. Bygg båda när du lägger till en sida.
 
+## Claude-kopplingen (MCP)
+
+- `src/app/api/mcp/[token]/route.ts` – tillståndslös Streamable HTTP, hemlighet i URL:en (`MCP_SECRET`).
+- `src/lib/mcp/server.ts` – verktygen (`crm_*`) och prompterna (`morgonrutin`, `uppfoljningsmejl`).
+  Kör med service role (förbi RLS) och sätter `owner_id` till `MCP_USER_EMAIL`, `logged_by` = Claude.
+- `src/lib/mcp/rules.ts` – reglerna i kod: inga steg `betald`/`live`, ingen ändring av betalande
+  företag, inga avtals-/betalverktyg, inga raderingar. Lägg nya regler här, inte bara i prompten.
+
 ## Kommandon
 
 ```bash

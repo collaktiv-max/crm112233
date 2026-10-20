@@ -81,8 +81,17 @@ export function Sidebar({ userName }: { userName: string }) {
       </nav>
 
       <Link
-        href="/status"
+        href="/claude"
         className={`mt-auto flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
+          isActive(pathname, "/claude") ? "bg-accent-light text-brand" : "text-gray-500 hover:bg-gray-100"
+        }`}
+      >
+        <NavIcon d="M12 3l1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4z" className="h-5 w-5" />
+        Claude
+      </Link>
+      <Link
+        href="/status"
+        className={`flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold transition ${
           isActive(pathname, "/status") ? "bg-accent-light text-brand" : "text-gray-500 hover:bg-gray-100"
         }`}
       >
