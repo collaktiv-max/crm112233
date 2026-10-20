@@ -347,7 +347,7 @@ export async function importCompanies(
     .select("id");
   if (error) return { inserted: 0, skipped, error: explainDbError(error)! };
 
-  const contacts = fresh.flatMap((r) => (r.contact ? [{ ...r.contact, company_id: r.company.id }] : []));
+  const contacts = fresh.flatMap((r) => r.contacts.map((c) => ({ ...c, company_id: r.company.id })));
   if (contacts.length > 0) {
     const { error: cErr } = await supabase.from("contacts").insert(contacts);
     if (cErr) return { inserted: inserted.length, skipped, error: `Kontaktpersoner: ${explainDbError(cErr)}` };

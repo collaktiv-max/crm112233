@@ -35,8 +35,39 @@ test("toImportRows bygger företag och kontakt, hoppar över rader utan namn", (
   assert.equal(rows[0].company.category, "Fika");
   assert.equal(rows[0].company.stage, "betald");
   assert.equal(rows[0].company.source, "Befintlig partner");
-  assert.deepEqual(rows[0].contact?.email, "anna@ett.se");
+  assert.deepEqual(rows[0].contacts[0]?.email, "anna@ett.se");
   assert.equal(rows[1].company.stage, "dialog");
-  assert.equal(rows[1].contact, null);
+  assert.deepEqual(rows[1].contacts, []);
   assert.equal(rows[1].company.id, "id2");
+});
+
+test("toImportRows slår ihop rader för samma företag och tar förlorade med anledning", () => {
+  const rows = toImportRows(
+    [
+      { Namn: "Dios", Kommun: "Gävle", Kontaktperson: "Christina", Mejl: "c@dios.se", Steg: "Kontaktad", Anteckning: "Mejlat 15 okt", Förlustanledning: "" },
+      { Namn: "dios", Kommun: "Gävle", Kontaktperson: "Jennie", Mejl: "j@dios.se", Steg: "Prospekt", Anteckning: "Kontakt sedan UF-året", Förlustanledning: "" },
+      { Namn: "KappAhl", Kommun: "", Kontaktperson: "", Mejl: "", Steg: "Förlorad", Anteckning: "", Förlustanledning: "Har redan liknande" },
+      { Namn: "Utan anledning", Kommun: "", Kontaktperson: "", Mejl: "", Steg: "Förlorad", Anteckning: "", Förlustanledning: "" },
+    ],
+    { defaultStage: "prospekt", defaultSource: null },
+  );
+  assert.equal(rows.length, 3);
+  assert.deepEqual(rows[0].contacts.map((c) => c.name), ["Christina", "Jennie"]);
+  assert.equal(rows[0].company.notes, "Mejlat 15 okt\nKontakt sedan UF-året");
+  assert.equal(rows[0].company.stage, "kontaktad");
+  assert.equal(rows[1].company.stage, "forlorad");
+  assert.equal(rows[1].company.lost_reason, "Har redan liknande");
+  assert.equal(rows[2].company.stage, "prospekt");
+});
+
+test("toImportRows behåller steget som kommit längst vid sammanslagning", () => {
+  const rows = toImportRows(
+    [
+      { Namn: "Dios", Kommun: "Gävle", Steg: "Kontaktad" },
+      { Namn: "Dios", Kommun: "Gävle", Steg: "Dialog" },
+    ],
+    { defaultStage: "prospekt", defaultSource: null },
+  );
+  assert.equal(rows.length, 1);
+  assert.equal(rows[0].company.stage, "dialog");
 });

@@ -1,4 +1,4 @@
-import { CATEGORIES, MUNICIPALITIES, STAGES, STAGE_LABELS, type Stage } from "./constants.ts";
+import { CATEGORIES, MAIN_STAGES, MUNICIPALITIES, STAGES, STAGE_LABELS, type Stage } from "./constants.ts";
 
 export type ImportRow = {
   company: {
@@ -16,21 +16,26 @@ export type ImportRow = {
     source: string | null;
     is_chain: boolean | null;
     stage: Stage;
+    lost_reason: string | null;
+    revisit_date: string | null;
     next_step: string | null;
     notes: string | null;
   };
-  contact: {
-    name: string;
-    role: string | null;
-    phone: string | null;
-    email: string | null;
-    is_decision_maker: boolean;
-  } | null;
+  contacts: ImportContact[];
+};
+
+export type ImportContact = {
+  name: string;
+  role: string | null;
+  phone: string | null;
+  email: string | null;
+  is_decision_maker: boolean;
 };
 
 type Field =
   | "name" | "org_nr" | "category" | "municipality" | "network" | "address" | "website"
   | "instagram" | "facebook" | "phone" | "source" | "is_chain" | "stage" | "next_step" | "notes"
+  | "lost_reason" | "revisit_date"
   | "contact_name" | "contact_role" | "contact_phone" | "contact_email";
 
 const ALIASES: Record<Field, string[]> = {
@@ -48,6 +53,8 @@ const ALIASES: Record<Field, string[]> = {
   is_chain: ["kedja", "chain"],
   stage: ["steg", "status", "stage", "pipeline"],
   next_step: ["nästa steg", "next step"],
+  lost_reason: ["förlustanledning", "anledning", "lost reason"],
+  revisit_date: ["återkom datum", "återkom", "revisit date"],
   notes: ["anteckning", "anteckningar", "notes", "kommentar"],
   contact_name: ["kontaktperson", "kontakt", "contact", "contact name", "ägare"],
   contact_role: ["roll", "role", "titel"],
@@ -100,6 +107,13 @@ function parseBool(value: string | null): boolean | null {
   return null;
 }
 
+const companyKey = (name: string, municipality: string | null) =>
+  `${name.trim().toLowerCase()}|${(municipality ?? "").trim().toLowerCase()}`;
+
+/**
+ * Gör om CSV-rader till företag. Flera rader för samma företag (samma namn och kommun)
+ * slås ihop: kontaktpersonerna samlas på ett företag och anteckningarna läggs ihop.
+ */
 export function toImportRows(
   records: Record<string, string>[],
   opts: { defaultStage: Stage; defaultSource: string | null; newId?: () => string },
@@ -107,51 +121,64 @@ export function toImportRows(
   if (records.length === 0) return [];
   const mapping = mapHeaders(Object.keys(records[0]));
   const newId = opts.newId ?? (() => crypto.randomUUID());
+  const byKey = new Map<string, ImportRow>();
 
-  return records
-    .map((rec) => {
-      const v: Partial<Record<Field, string>> = {};
-      for (const [header, field] of Object.entries(mapping)) {
-        const val = rec[header]?.trim();
-        if (field && val) v[field] = val;
+  for (const rec of records) {
+    const v: Partial<Record<Field, string>> = {};
+    for (const [header, field] of Object.entries(mapping)) {
+      const val = rec[header]?.trim();
+      if (field && val) v[field] = val;
+    }
+    const name = v.name ?? "";
+    if (!name) continue;
+
+    const municipality = v.municipality ? matchList(v.municipality, MUNICIPALITIES) : null;
+    const contactName = v.contact_name ?? (v.contact_email || v.contact_phone ? "Kontakt" : null);
+    const contact: ImportContact | null = contactName
+      ? { name: contactName, role: v.contact_role ?? null, phone: v.contact_phone ?? null, email: v.contact_email ?? null, is_decision_maker: false }
+      : null;
+
+    const key = companyKey(name, municipality);
+    const existing = byKey.get(key);
+    if (existing) {
+      if (contact && !existing.contacts.some((c) => c.name === contact.name && c.email === contact.email)) existing.contacts.push(contact);
+      // Behåll det steg som kommit längst i huvudflödet.
+      const later = parseStage(v.stage);
+      if (later && MAIN_STAGES.indexOf(later) > MAIN_STAGES.indexOf(existing.company.stage)) existing.company.stage = later;
+      if (v.notes && !existing.company.notes?.includes(v.notes)) {
+        existing.company.notes = existing.company.notes ? `${existing.company.notes}\n${v.notes}` : v.notes;
       }
-      const name = v.name ?? "";
-      if (!name) return null;
+      continue;
+    }
 
-      const stage = parseStage(v.stage) ?? opts.defaultStage;
-      const contactName = v.contact_name ?? (v.contact_email || v.contact_phone ? "Kontakt" : null);
+    // Sidospåren kräver anledning resp. datum – saknas det används standardsteget.
+    let stage = parseStage(v.stage) ?? opts.defaultStage;
+    const revisit = v.revisit_date && /^\d{4}-\d{2}-\d{2}$/.test(v.revisit_date) ? v.revisit_date : null;
+    if ((stage === "forlorad" && !v.lost_reason) || (stage === "aterkom" && !revisit)) stage = opts.defaultStage;
 
-      const row: ImportRow = {
-        company: {
-          id: newId(),
-          name,
-          org_nr: v.org_nr ?? null,
-          category: v.category ? matchList(v.category, CATEGORIES) : null,
-          municipality: v.municipality ? matchList(v.municipality, MUNICIPALITIES) : null,
-          network: v.network ?? null,
-          address: v.address ?? null,
-          website: v.website ?? null,
-          instagram: v.instagram ?? null,
-          facebook: v.facebook ?? null,
-          phone: v.phone ?? null,
-          source: v.source ?? opts.defaultSource,
-          is_chain: parseBool(v.is_chain ?? null),
-          // Sidospåren kräver anledning/datum och importeras därför inte direkt.
-          stage: stage === "forlorad" || stage === "aterkom" ? opts.defaultStage : stage,
-          next_step: v.next_step ?? null,
-          notes: v.notes ?? null,
-        },
-        contact: contactName
-          ? {
-              name: contactName,
-              role: v.contact_role ?? null,
-              phone: v.contact_phone ?? null,
-              email: v.contact_email ?? null,
-              is_decision_maker: false,
-            }
-          : null,
-      };
-      return row;
-    })
-    .filter((r): r is ImportRow => r !== null);
+    byKey.set(key, {
+      company: {
+        id: newId(),
+        name,
+        org_nr: v.org_nr ?? null,
+        category: v.category ? matchList(v.category, CATEGORIES) : null,
+        municipality,
+        network: v.network ?? null,
+        address: v.address ?? null,
+        website: v.website ?? null,
+        instagram: v.instagram ?? null,
+        facebook: v.facebook ?? null,
+        phone: v.phone ?? null,
+        source: v.source ?? opts.defaultSource,
+        is_chain: parseBool(v.is_chain ?? null),
+        stage,
+        lost_reason: stage === "forlorad" ? v.lost_reason! : null,
+        revisit_date: stage === "aterkom" ? revisit : null,
+        next_step: v.next_step ?? null,
+        notes: v.notes ?? null,
+      },
+      contacts: contact ? [contact] : [],
+    });
+  }
+  return [...byKey.values()];
 }

@@ -76,7 +76,7 @@ export function ImportClient() {
                 <li key={r.company.id} className="flex justify-between gap-2 px-3 py-2">
                   <span className="truncate font-medium">{r.company.name}</span>
                   <span className="shrink-0 text-xs text-gray-500">
-                    {[r.company.municipality, STAGE_LABELS[r.company.stage], r.contact?.name].filter(Boolean).join(" · ")}
+                    {[r.company.municipality, STAGE_LABELS[r.company.stage], r.contacts.map((c) => c.name).join(", ")].filter(Boolean).join(" · ")}
                   </span>
                 </li>
               ))}
